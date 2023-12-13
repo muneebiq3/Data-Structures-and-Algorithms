@@ -1,6 +1,5 @@
 # Data Structures and Algorithms for BCS-4
-Welcome!
-Hello, BCS 4!  This is a straightforward repository I've put together to assist you with this semester's subject. I hope it proves helpful :) Best of luck!
+Hello, BCS 4!  This is a straightforward repository I've put together to assist you with this semester's DSA subject. I hope it proves helpful :) Best of luck!
 - Data Structures Covered
 - Array
 - Single Linked List
