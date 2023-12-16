@@ -1,28 +1,9 @@
 #include <iostream>
-#include <conio.h>
+#include "header.h"
 
 using namespace std;
 
-struct vertex {
-	
-	int info;
-	
-	struct vertex *next = NULL;
-	struct vertex *previous = NULL;
-	
-	struct edge *edgeList = NULL; //for edges of every vertex
-};
-
-struct edge {
-	
-	int info;
-	
-	struct edge *link = NULL;
-};
-
-struct vertex *start = NULL;
-
-void insertVertex(int data) {
+void control::insertVertex(int data) {
 	
 	struct vertex *duplicateCheck = new struct vertex;
 	duplicateCheck = start;
@@ -53,7 +34,7 @@ void insertVertex(int data) {
 	
 }
 
-void insertEdge(vertex *v1, vertex *v2) {
+void control::insertEdge(vertex *v1, vertex *v2) {
 	
 	if(v1 == v2) {
 		cout << "Cannot insert an edge between same vertex!" << endl;
@@ -105,7 +86,7 @@ void insertEdge(vertex *v1, vertex *v2) {
 	
 }
 
-void deleteVertex(int data) {
+void control::deleteVertex(int data) {
 	
     // Find the vertex to be deleted
     vertex *current = start;
@@ -171,7 +152,8 @@ void deleteVertex(int data) {
     cout << "Vertex with data " << data << " and its edges deleted." << endl;
 }
 
-void deleteEdge(vertex *v1, vertex *v2) {
+void control::deleteEdge(vertex *v1, vertex *v2) {
+	
     if (v1 == v2) {
         cout << "Cannot delete an edge between the same vertex!" << endl;
         return;
@@ -223,7 +205,7 @@ void deleteEdge(vertex *v1, vertex *v2) {
     cout << "Edge deleted between vertices " << v1->info << " and " << v2->info << endl;
 }
 
-void display() {
+void control::display() {
 	
 	vertex *tempVertex  = start;
 	
@@ -251,158 +233,4 @@ void display() {
 		
 	}
 	
-}
-
-int main() {
-	
-	int choice;
-	
-	while(1) {
-		
-		cout << "\nAdjacency List for Undirected Graph\n";
-		cout << "\n1. Insert Vertex";
-		cout << "\n2. Insert Edge";
-		cout << "\n3. Delete Vertex";
-		cout << "\n4. Delete Edge";
-		cout << "\n5. Display";
-		cout << "\n6. Quit" << endl << endl;
-		cout << "Enter your choice: ";
-		cin >> choice;
-		
-		switch (choice) {
-			
-			case 1: {
-				
-				int data;
-				cout << "Enter the vertex to be added: "; cin >> data;
-				insertVertex(data);
-				
-				getch();
-				system("cls");
-				break;
-				
-			} case 2: {
-				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					getch();
-					system("cls");
-					break;
-				}
-				
-				int vertex1, vertex2;
-				cout << "Enter the first vertex: "; cin >> vertex1;
-				cout << "Enter the second vertex: "; cin >> vertex2;
-				
-				vertex *v1 = NULL, *v2 = NULL;
-				vertex *temp = start;
-				
-				while(temp != NULL) {
-					
-					if(temp->info == vertex1)
-						v1 = temp;
-					if(temp->info == vertex2)
-						v2 = temp;
-						
-					temp = temp->next;
-					
-				}
-				
-				if(v1 == NULL && v2 == NULL)
-					cout << "Both Vertices " << vertex1 << " and " << vertex2 << " not found in the Graph!";
-				else if(v1 == NULL)
-					cout << "First Vertex " << vertex1 << " not found in the Graph!";
-				else if(v2 == NULL)
-					cout << "Second Vertex " << vertex2 << " not found in the Graph!";
-				else 
-					insertEdge(v1, v2);
-				
-				getch();
-				system("cls");
-				break;
-				
-			} case 3: {
-				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					getch();
-					system("cls");
-					break;
-				}
-				
-				int data;
-				cout << "Enter the vertex to be deleted: "; cin >> data;
-				deleteVertex(data);
-				
-				getch();
-				system("cls");
-				break;
-				
-				
-			} case 4: {
-				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					getch();
-					system("cls");
-					break;
-				}
-				
-				int vertex1, vertex2;
-				cout << "Enter the first vertex: "; cin >> vertex1;
-				cout << "Enter the second vertex: "; cin >> vertex2;
-				
-				vertex *v1 = NULL, *v2 = NULL;
-				vertex *temp = start;
-				
-				while(temp != NULL) {
-					
-					if(temp->info == vertex1)
-						v1 = temp;
-					if(temp->info == vertex2)
-						v2 = temp;
-						
-					temp = temp->next;
-					
-				}
-				
-				if(v1 == NULL && v2 == NULL)
-					cout << "Both Vertices " << vertex1 << " and " << vertex2 << " not found in the Graph!";
-				else if(v1 == NULL)
-					cout << "First Vertex " << vertex1 << " not found in the Graph!";
-				else if(v2 == NULL)
-					cout << "Second Vertex " << vertex2 << " not found in the Graph!";
-				else 
-					deleteEdge(v1, v2);
-				
-				getch();
-				system("cls");
-				break;
-				
-			} case 5: {
-				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					getch();
-					system("cls");
-					break;
-				}
-				
-				else
-					display();
-				
-				getch();
-				system("cls");
-				break;
-				
-			} case 6:
-				exit(0);
-				
-			default: {
-				cout << "Wrong Choice!";
-				getch();
-				system("cls");
-			}
-		}
-	}
 }
