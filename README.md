@@ -4,7 +4,6 @@ This is a straightforward repository I've put together to assist you with this s
 
 ### Topics Covered:
 
-- Array
 - Single Linked List
 - Double Linked List
 - Circular Linked List
@@ -19,3 +18,4 @@ This is a straightforward repository I've put together to assist you with this s
 - Huffman Tree
 - Tower of Hanoi
 - Array and Linked List-based Sorting Algorithms
+- Adjacency List for Undirected Graph
