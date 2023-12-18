@@ -7,10 +7,9 @@ struct vertex {
 	
 	int info;
 	
+	struct edge *head = NULL;
 	struct vertex *next = NULL;
-	struct vertex *previous = NULL;
-	
-	struct edge *edgeList = NULL; //for edges of every vertex
+	   
 };
 
 struct edge {
@@ -46,9 +45,8 @@ void insertVertex(int data) {
 		while(q->next != NULL)
 			q = q->next;
 			
-		temp->previous = q;
 		q->next = temp;
-		
+		temp->next = NULL;
 	}
 	
 }
@@ -60,7 +58,7 @@ void insertEdge(vertex *v1, vertex *v2) {
 		return;
 	}
 	
-	edge *existingEdge = v1->edgeList;
+	edge *existingEdge = v1->head;
     while (existingEdge != NULL) {
         if (existingEdge->info == v2->info) {
             cout << "Edge already exists between vertices " << v1->info << " and " << v2->info << endl;
@@ -72,12 +70,12 @@ void insertEdge(vertex *v1, vertex *v2) {
 	struct edge *temp = new struct edge;
 	temp->info = v2->info;
 	
-	if(v1->edgeList == NULL)
-		v1->edgeList = temp;
+	if(v1->head == NULL)
+		v1->head = temp;
 		
 	else {
 		
-		edge *q = v1->edgeList;
+		edge *q = v1->head;
 		while(q->link != NULL)
 			q = q->link;
 			
@@ -88,12 +86,12 @@ void insertEdge(vertex *v1, vertex *v2) {
 	temp = new edge;
 	temp->info = v1->info;
 	
-	if(v2->edgeList == NULL)
-		v2->edgeList = temp;
+	if(v2->head == NULL)
+		v2->head = temp;
 		
 	else {
 		
-		edge *q =v2->edgeList;
+		edge *q =v2->head;
 		while(q->link != NULL)
 			q = q->link;
 			
@@ -117,61 +115,58 @@ void deleteVertex(int data) {
     }
 
     if (current == NULL) {
-        cout << "Vertex with data " << data << " not found." << endl;
+        cout << "Vertex " << data << " not found." << endl;
         return;
     }
 
     // Delete all edges connected to the vertex
-    edge *currentEdge = current->edgeList;
+    edge *currentEdge = current->head;
     while (currentEdge != NULL) {
         edge *tempEdge = currentEdge;
         currentEdge = currentEdge->link;
 
         // Update the edge list of the other vertex
         vertex *connectedVertex = start;
-        while (connectedVertex != NULL) {
-            if (connectedVertex->info == tempEdge->info) {
-                // Delete the edge from the other vertex's edge list
-                edge *prevEdge = NULL;
-                edge *currentEdge2 = connectedVertex->edgeList;
-                while (currentEdge2 != NULL && currentEdge2->info != data) {
-                    prevEdge = currentEdge2;
-                    currentEdge2 = currentEdge2->link;
-                }
+        while (connectedVertex != NULL && connectedVertex->info != tempEdge->info) {
+            connectedVertex = connectedVertex->next;
+        }
 
-                if (prevEdge == NULL) {
-                    connectedVertex->edgeList = currentEdge2->link;
-                } else {
-                    prevEdge->link = currentEdge2->link;
-                }
-
-                delete currentEdge2;
-                break;
+        if (connectedVertex != NULL) {
+            // Find and delete the corresponding edge in the connected vertex
+            edge *prevEdge = NULL;
+            edge *currentEdge2 = connectedVertex->head;
+            while (currentEdge2 != NULL && currentEdge2->info != data) {
+                prevEdge = currentEdge2;
+                currentEdge2 = currentEdge2->link;
             }
 
-            connectedVertex = connectedVertex->next;
+            if (prevEdge == NULL) {
+                connectedVertex->head = currentEdge2->link;
+            } else {
+                prevEdge->link = currentEdge2->link;
+            }
+
+            delete currentEdge2;
         }
 
         delete tempEdge;
     }
 
-    // Update links to bypass the vertex to be deleted
-    if (prev == NULL) {
-        start = current->next;
-    } else {
-        prev->next = current->next;
-        if (current->next != NULL) {
-            current->next->previous = prev; // Update the previous link of the next vertex
-        }
-    }
-
     // Delete the vertex
+    if (prev == NULL) 
+        // If the vertex to be deleted is the first one
+        start = current->next;
+    else 
+        prev->next = current->next;
+    
+
     delete current;
 
-    cout << "Vertex with data " << data << " and its edges deleted." << endl;
+    cout << "Vertex " << data << " and its edges deleted." << endl;
 }
 
 void deleteEdge(vertex *v1, vertex *v2) {
+	
     if (v1 == v2) {
         cout << "Cannot delete an edge between the same vertex!" << endl;
         return;
@@ -179,7 +174,7 @@ void deleteEdge(vertex *v1, vertex *v2) {
 
     // Check if the edge exists from v1 to v2
     edge *prev1 = NULL;
-    edge *current1 = v1->edgeList;
+    edge *current1 = v1->head;
     while (current1 != NULL && current1->info != v2->info) {
         prev1 = current1;
         current1 = current1->link;
@@ -192,14 +187,14 @@ void deleteEdge(vertex *v1, vertex *v2) {
 
     // Delete edge from v1 to v2
     if (prev1 == NULL) {
-        v1->edgeList = current1->link;
+        v1->head = current1->link;
     } else {
         prev1->link = current1->link;
     }
 
     // Check if the edge exists from v2 to v1
     edge *prev2 = NULL;
-    edge *current2 = v2->edgeList;
+    edge *current2 = v2->head;
     while (current2 != NULL && current2->info != v1->info) {
         prev2 = current2;
         current2 = current2->link;
@@ -212,7 +207,7 @@ void deleteEdge(vertex *v1, vertex *v2) {
 
     // Delete edge from v2 to v1
     if (prev2 == NULL) {
-        v2->edgeList = current2->link;
+        v2->head = current2->link;
     } else {
         prev2->link = current2->link;
     }
@@ -231,7 +226,7 @@ void display() {
 		
 		cout << "Vertex " << tempVertex->info << " is connected to: ";
 		
-		edge *tempEdge = tempVertex->edgeList;
+		edge *tempEdge = tempVertex->head;
 		
 		if(tempEdge == NULL)
 			cout << tempVertex->info;
@@ -285,6 +280,7 @@ int main() {
 				
 				if(start == NULL) {
 					cout << "Graph is empty!" << endl;
+					
 					getch();
 					system("cls");
 					break;
@@ -327,7 +323,7 @@ int main() {
 					cout << "Graph is empty!" << endl;
 					getch();
 					system("cls");
-					break;
+					break;;
 				}
 				
 				int data;
@@ -343,6 +339,7 @@ int main() {
 				
 				if(start == NULL) {
 					cout << "Graph is empty!" << endl;
+					
 					getch();
 					system("cls");
 					break;
@@ -383,6 +380,7 @@ int main() {
 				
 				if(start == NULL) {
 					cout << "Graph is empty!" << endl;
+					
 					getch();
 					system("cls");
 					break;
