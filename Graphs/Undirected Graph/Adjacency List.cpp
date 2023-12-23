@@ -3,392 +3,368 @@
 
 using namespace std;
 
-struct vertex {
+struct node {
 	
-	int info;
+	char data;
 	
-	struct edge *head = NULL;
-	struct vertex *next = NULL;
-	   
+	struct node *next = NULL;
+	struct edge *adj = NULL;
+	
 };
 
 struct edge {
 	
-	int info;
+	char data;
 	
 	struct edge *link = NULL;
+	
 };
 
-struct vertex *start = NULL;
+struct node *start = NULL;
 
-void insertVertex(int data) {
+struct node *find(char item_name) {
 	
-	struct vertex *duplicateCheck = new struct vertex;
-	duplicateCheck = start;
-    while (duplicateCheck != NULL) {
-        if (duplicateCheck->info == data) {
-            cout << "Vertex " << data << " already exists!" << endl;
-            return;
-        }
-        duplicateCheck = duplicateCheck->next;
-    }
+	node *ptr = start;
+	while(ptr != NULL) {
+
+		if (item_name == ptr->data)
+			return ptr;
+		
+		else
+			ptr = ptr->next;
+		
+	}
+	return NULL;
 	
-	struct vertex *temp = new struct vertex;
-	temp->info = data;
+}
+
+void insert_node(char item_name) {
 	
-	if(start == NULL)
+	struct node *temp = new struct node;
+	struct node *ptr = new struct node;
+
+	temp->data = item_name;
+	temp->next = NULL;
+	temp->adj = NULL;
+	
+	if(start ==  NULL)
 		start = temp;
 		
 	else {
-		
-		vertex *q = start;
-		while(q->next != NULL)
-			q = q->next;
-			
-		q->next = temp;
-		temp->next = NULL;
-	}
 	
+		ptr = start;
+		while(ptr->next != NULL)
+			ptr = ptr->next;
+		
+		ptr->next = temp;	
+	}
+	cout << "Node with data " << item_name << " inserted in the graph." << endl;
 }
 
-void insertEdge(vertex *v1, vertex *v2) {
+void insert_edge(char u, char v) {
+
+    if (start == NULL) {
+        cout << "Graph is empty!" << endl;
+        return;
+    }
+
+    struct node* locu = find(u);
+    struct node* locv = find(v);
+
+    if (locu == NULL) {
+        cout << "Node with data " << u << " not found in the graph!" << endl;
+        return;
+    }
+    if (locv == NULL) {
+        cout << "Node with data " << v << " not found in the graph!" << endl;
+        return;
+    }
+
+    // Check if the edge already exists
+    struct edge* ptr = locu->adj;
+    while (ptr != NULL) {
+        if (ptr->data == v) {
+            cout << "Edge between Node " << u << " and Node " << v << " already exists." << endl;
+            return;
+        }
+        ptr = ptr->link;
+    }
+
+    // Insert edge from location u to locution v
+    struct edge* temp = new edge;
+    temp->data = v;
+    temp->link = NULL;
+
+    if (locu->adj == NULL)
+        locu->adj = temp;
+    else {
+        ptr = locu->adj;
+        while (ptr->link != NULL)
+            ptr = ptr->link;
+        ptr->link = temp;
+    }
+
+    // Check if the edge already exists
+    ptr = locv->adj;
+    while (ptr != NULL) {
+        if (ptr->data == u) {
+            cout << "Edge between Node " << u << " and Node " << v << " already exists!" << endl;
+            // If the edge already exists, undo
+            delete temp;
+            return;
+        }
+        ptr = ptr->link;
+    }
+
+    // Insert edge from locv to locu
+    temp = new edge;
+    temp->data = u;
+    temp->link = NULL;
+
+    if (locv->adj == NULL)
+        locv->adj = temp;
+    else {
+        ptr = locv->adj;
+        while (ptr->link != NULL)
+            ptr = ptr->link;
+        ptr->link = temp;
+    }
+
+    cout << "Edge inserted between Node " << u << " and Node " << v << endl;
+}
+
+void delete_node(char u) {
 	
-	if(v1 == v2) {
-		cout << "Cannot insert an edge between same vertex!" << endl;
+	if (start == NULL) {
+		
+		cout << "Graph is empty!" << endl;
+		return;
+		
+	}
+	
+	struct node *temp = new struct node;
+	struct node *q = new struct node;
+	
+	//if the node to be deleted is the starting node
+	if(start->data == u) {
+		temp = start;
+		start = start->next;
+		delete temp;
 		return;
 	}
 	
-	edge *existingEdge = v1->head;
-    while (existingEdge != NULL) {
-        if (existingEdge->info == v2->info) {
-            cout << "Edge already exists between vertices " << v1->info << " and " << v2->info << endl;
-            return;
-        }
-        existingEdge = existingEdge->link;
-    }
+	q = start;
+	while(q->next->next != NULL) {
+		
+		if(q->next->data == u) {			
+			temp = q->next;
+			q->next = temp->next;
+			delete temp;
+			return;
+		}
+		q = q->next;
+	}
+	if(q->next->data == u) {
+		temp = q->next;
+		delete temp;
+		q->next = NULL;
+	}
+	cout << "Node with data " << u << " and its edges has been deleted." << endl;
+}
+
+void delete_node_edge(char u) {
+	
+	// delete all edges connected to the vertex
+	struct node *ptr = new struct node;
 	
 	struct edge *temp = new struct edge;
-	temp->info = v2->info;
+	struct edge *q = new struct edge;
 	
-	if(v1->head == NULL)
-		v1->head = temp;
+	ptr = start;
+	
+	while(ptr != NULL) {
 		
-	else {
+		// delete first edge of a node if that node makes an edge with current node to be deleted
+		if(ptr->adj->data == u) {
+			temp = ptr->adj;
+			ptr->adj = ptr->adj->link;
+			delete temp;
+			continue;
+		}
 		
-		edge *q = v1->head;
-		while(q->link != NULL)
-			q = q->link;
+		// delete edge of a node if that node makes an edge with current node to be deleted if it's not the first edge
+		q = ptr->adj;
+		while(q->link->link != NULL) {
 			
-		q->link = temp;
-		
-	}
-	
-	temp = new edge;
-	temp->info = v1->info;
-	
-	if(v2->head == NULL)
-		v2->head = temp;
-		
-	else {
-		
-		edge *q =v2->head;
-		while(q->link != NULL)
+			if(q->link->data = u) {
+				temp = q->link;
+				q->link = temp->link;
+				delete temp;
+				continue;
+			}
 			q = q->link;
-			
-		q->link = temp;
-		
+		}
+		if(q->link->data == u) {
+			temp = q->link;
+			delete temp;
+			q->link = NULL;
+		}
+		ptr = ptr->next;
 	}
-	
-	cout << "Edge inserted between vertices " << v1->info << " and " << v2->info << endl;
 	
 }
 
-void deleteVertex(int data) {
-	
-    // Find the vertex to be deleted
-    vertex *current = start;
-    vertex *prev = NULL;
+void delete_edge(char u, char v) {
 
-    while (current != NULL && current->info != data) {
-        prev = current;
-        current = current->next;
-    }
-
-    if (current == NULL) {
-        cout << "Vertex " << data << " not found." << endl;
+    if (start == NULL) {
+        cout << "Graph is empty!" << endl;
         return;
     }
 
-    // Delete all edges connected to the vertex
-    edge *currentEdge = current->head;
-    while (currentEdge != NULL) {
-        edge *tempEdge = currentEdge;
-        currentEdge = currentEdge->link;
+    struct node* locu = find(u);
+    struct node* locv = find(v);
 
-        // Update the edge list of the other vertex
-        vertex *connectedVertex = start;
-        while (connectedVertex != NULL && connectedVertex->info != tempEdge->info) {
-            connectedVertex = connectedVertex->next;
-        }
-
-        if (connectedVertex != NULL) {
-            // Find and delete the corresponding edge in the connected vertex
-            edge *prevEdge = NULL;
-            edge *currentEdge2 = connectedVertex->head;
-            while (currentEdge2 != NULL && currentEdge2->info != data) {
-                prevEdge = currentEdge2;
-                currentEdge2 = currentEdge2->link;
-            }
-
-            if (prevEdge == NULL) {
-                connectedVertex->head = currentEdge2->link;
-            } else {
-                prevEdge->link = currentEdge2->link;
-            }
-
-            delete currentEdge2;
-        }
-
-        delete tempEdge;
+    if (locu == NULL) {
+        cout << "Node with data " << u << " not found!" << endl;
+        return;
     }
-
-    // Delete the vertex
-    if (prev == NULL) 
-        // If the vertex to be deleted is the first one
-        start = current->next;
-    else 
-        prev->next = current->next;
-    
-
-    delete current;
-
-    cout << "Vertex " << data << " and its edges deleted." << endl;
-}
-
-void deleteEdge(vertex *v1, vertex *v2) {
-	
-    if (v1 == v2) {
-        cout << "Cannot delete an edge between the same vertex!" << endl;
+    if (locv == NULL) {
+        cout << "Node with data " << v << " not found!" << endl;
         return;
     }
 
-    // Check if the edge exists from v1 to v2
-    edge *prev1 = NULL;
-    edge *current1 = v1->head;
-    while (current1 != NULL && current1->info != v2->info) {
-        prev1 = current1;
-        current1 = current1->link;
-    }
-
-    if (current1 == NULL) {
-        cout << "Edge does not exist between vertices " << v1->info << " and " << v2->info << endl;
-        return;
-    }
-
-    // Delete edge from v1 to v2
-    if (prev1 == NULL) {
-        v1->head = current1->link;
+    // Delete edge from locu to locv
+    struct edge* q = locu->adj;
+    struct edge* temp = NULL;
+    if (q != NULL && q->data == v) {
+        temp = q;
+        locu->adj = q->link;
+        delete temp;
     } else {
-        prev1->link = current1->link;
-    }
-
-    // Check if the edge exists from v2 to v1
-    edge *prev2 = NULL;
-    edge *current2 = v2->head;
-    while (current2 != NULL && current2->info != v1->info) {
-        prev2 = current2;
-        current2 = current2->link;
-    }
-
-    if (current2 == NULL) {
-        cout << "Edge does not exist between vertices " << v2->info << " and " << v1->info << endl;
+        while (q != NULL && q->link != NULL) {
+            if (q->link->data == v) {
+                temp = q->link;
+                q->link = temp->link;
+                delete temp;
+            }
+            q = q->link;
+        }
+        cout << "Edge between Node " << u << " and Node " << v << " not found!" << endl;
         return;
     }
 
-    // Delete edge from v2 to v1
-    if (prev2 == NULL) {
-        v2->head = current2->link;
+    // Delete edge from locv to locu
+    q = locv->adj;
+    if (q != NULL && q->data == u) {
+        temp = q;
+        locv->adj = q->link;
+        delete temp;
     } else {
-        prev2->link = current2->link;
+        while (q != NULL && q->link != NULL) {
+            if (q->link->data == u) {
+                temp = q->link;
+                q->link = temp->link;
+                delete temp;
+            }
+            q = q->link;
+        }
     }
-
-    delete current1;
-    delete current2;
-
-    cout << "Edge deleted between vertices " << v1->info << " and " << v2->info << endl;
+    cout << "The edge between Node " << u << " and Node " << v << " has been deleted." << endl;
 }
 
 void display() {
 	
-	vertex *tempVertex  = start;
+	if(start == NULL) {
+		cout << "Graph is empty!" << endl;
+		return;
+	}
 	
-	while(tempVertex != NULL) {
+	struct node *ptr  = new struct node;
+	ptr = start;
+	
+	while(ptr != NULL) {
 		
-		cout << "Vertex " << tempVertex->info << " is connected to: ";
+		cout << "Node with data " << ptr->data << " is connected to: ";
 		
-		edge *tempEdge = tempVertex->head;
+		edge *q = ptr->adj;
 		
-		if(tempEdge == NULL)
-			cout << tempVertex->info;
+		if(q == NULL)
+			cout << ptr->data;
 			
 		else {
 			
-			while(tempEdge != NULL) {
+			while(q != NULL) {
 			
-				cout << tempEdge->info << "	";
-				tempEdge = tempEdge->link;
+				cout << q->data << "	";
+				q = q->link;
 			
 			}	
 		}
 
 		cout << endl;
-		tempVertex = tempVertex->next;
+		ptr = ptr->next;
 		
 	}
 	
 }
 
-int main() {
+int main () {
 	
 	int choice;
+	char node, origin, destination;
 	
-	while(1) {
+	while (1) {
 		
-		cout << "\nAdjacency List for Undirected Graph\n";
-		cout << "\n1. Insert Vertex";
-		cout << "\n2. Insert Edge";
-		cout << "\n3. Delete Vertex";
-		cout << "\n4. Delete Edge";
+		cout << "\nAdjacency List\n";
+		cout << "\n1. Insert a node";
+		cout << "\n2. Insert an edge";
+		cout << "\n3. Delete a node";
+		cout << "\n4. Delete an edge";
 		cout << "\n5. Display";
 		cout << "\n6. Quit" << endl << endl;
 		cout << "Enter your choice: ";
 		cin >> choice;
 		
-		switch (choice) {
+		switch(choice) {
 			
 			case 1: {
 				
-				int data;
-				cout << "Enter the vertex to be added: "; cin >> data;
-				insertVertex(data);
-				
+				cout << "Enter a node to be added: "; cin >> node;
+				insert_node(node);
 				getch();
 				system("cls");
 				break;
 				
 			} case 2: {
 				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					
-					getch();
-					system("cls");
-					break;
-				}
-				
-				int vertex1, vertex2;
-				cout << "Enter the first vertex: "; cin >> vertex1;
-				cout << "Enter the second vertex: "; cin >> vertex2;
-				
-				vertex *v1 = NULL, *v2 = NULL;
-				vertex *temp = start;
-				
-				while(temp != NULL) {
-					
-					if(temp->info == vertex1)
-						v1 = temp;
-					if(temp->info == vertex2)
-						v2 = temp;
-						
-					temp = temp->next;
-					
-				}
-				
-				if(v1 == NULL && v2 == NULL)
-					cout << "Both Vertices " << vertex1 << " and " << vertex2 << " not found in the Graph!";
-				else if(v1 == NULL)
-					cout << "First Vertex " << vertex1 << " not found in the Graph!";
-				else if(v2 == NULL)
-					cout << "Second Vertex " << vertex2 << " not found in the Graph!";
-				else 
-					insertEdge(v1, v2);
-				
+				cout << "Enter the first node: "; cin >> origin;
+				cout << "Enter the second node: "; cin >> destination;
+				insert_edge(origin, destination);
 				getch();
 				system("cls");
 				break;
 				
 			} case 3: {
 				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					getch();
-					system("cls");
-					break;;
-				}
-				
-				int data;
-				cout << "Enter the vertex to be deleted: "; cin >> data;
-				deleteVertex(data);
-				
+				cout << "Enter a node to be deleted: "; cin >> node;
+				delete_node_edge(node);
+				delete_node(node);
 				getch();
 				system("cls");
 				break;
 				
-				
 			} case 4: {
 				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					
-					getch();
-					system("cls");
-					break;
-				}
-				
-				int vertex1, vertex2;
-				cout << "Enter the first vertex: "; cin >> vertex1;
-				cout << "Enter the second vertex: "; cin >> vertex2;
-				
-				vertex *v1 = NULL, *v2 = NULL;
-				vertex *temp = start;
-				
-				while(temp != NULL) {
-					
-					if(temp->info == vertex1)
-						v1 = temp;
-					if(temp->info == vertex2)
-						v2 = temp;
-						
-					temp = temp->next;
-					
-				}
-				
-				if(v1 == NULL && v2 == NULL)
-					cout << "Both Vertices " << vertex1 << " and " << vertex2 << " not found in the Graph!";
-				else if(v1 == NULL)
-					cout << "First Vertex " << vertex1 << " not found in the Graph!";
-				else if(v2 == NULL)
-					cout << "Second Vertex " << vertex2 << " not found in the Graph!";
-				else 
-					deleteEdge(v1, v2);
-				
+				cout << "Enter the first node: "; cin >> origin;
+				cout << "Enter the second node: "; cin >> destination;
+				delete_edge(origin, destination);
 				getch();
 				system("cls");
 				break;
 				
 			} case 5: {
 				
-				if(start == NULL) {
-					cout << "Graph is empty!" << endl;
-					
-					getch();
-					system("cls");
-					break;
-				}
-				
-				else
-					display();
-				
+				display();
 				getch();
 				system("cls");
 				break;
@@ -401,6 +377,10 @@ int main() {
 				getch();
 				system("cls");
 			}
+			
 		}
+		
 	}
+		
+	return 0;
 }
