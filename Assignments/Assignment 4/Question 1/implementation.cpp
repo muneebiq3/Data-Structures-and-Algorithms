@@ -3,148 +3,196 @@
 
 using namespace std;
 
-void control::insertVertex(int data) {
+struct node *control::find(char item_name) {
 	
-	struct vertex *temp = new struct vertex;
-	temp->info = data;
-	
-	if(start == NULL)
-		start = temp;
+	struct node *ptr = new node;
+	ptr = start;
+	while(ptr != NULL) {
+
+		if (item_name == ptr->data)
+			return ptr;
 		
-	else {
+		else
+			ptr = ptr->next;
 		
-		vertex *q = start;
-		while(q->next != NULL)
-			q = q->next;
-			
-		q->next = temp;
-		temp->next = NULL;
 	}
+	return NULL;
 	
 }
 
-void control::insertEdge(vertex *v1, vertex *v2) {
+void control::insert_node(char item_name) {
+
+	struct node *temp = new struct node;
+	struct node *ptr = new struct node;
+
+	temp->data = item_name;
+	temp->next = NULL;
+	temp->adj = NULL;
 	
-	struct edge *temp = new struct edge;
-	temp->info = v2->info;
-	
-	if(v1->head == NULL)
-		v1->head = temp;
+	if(start ==  NULL)
+		start = temp;
 		
 	else {
+	
+		ptr = start;
+		while(ptr->next != NULL)
+			ptr = ptr->next;
 		
-		edge *q = v1->head;
-		while(q->link != NULL)
-			q = q->link;
-			
-		q->link = temp;
-		
+		ptr->next = temp;	
 	}
-	
-	temp = new edge;
-	temp->info = v1->info;
-	
-	if(v2->head == NULL)
-		v2->head = temp;
-		
-	else {
-		
-		edge *q =v2->head;
-		while(q->link != NULL)
-			q = q->link;
-			
-		q->link = temp;
-		
-	}
-	
+}
+
+void control::insert_edge(char u, char v) {
+
+    struct node* locu = find(u);
+    struct node* locv = find(v);
+    
+    struct edge* ptr = locu->adj;
+
+    // Insert edge from location u to locution v
+    struct edge* temp = new edge;
+    temp->data = v;
+    temp->link = NULL;
+
+    if (locu->adj == NULL)
+        locu->adj = temp;
+    else {
+        ptr = locu->adj;
+        while (ptr->link != NULL)
+            ptr = ptr->link;
+        ptr->link = temp;
+    }
+
+    // Insert edge from locv to locu
+    temp = new edge;
+    temp->data = u;
+    temp->link = NULL;
+
+    if (locv->adj == NULL)
+        locv->adj = temp;
+    else {
+        ptr = locv->adj;
+        while (ptr->link != NULL)
+            ptr = ptr->link;
+        ptr->link = temp;
+    }
 }
 
 void control::display() {
 	
-	vertex *tempVertex  = start;
+	struct node *ptr  = new struct node;
+	ptr = start;
 	
-	while(tempVertex != NULL) {
+	while(ptr != NULL) {
 		
-		cout << "Vertex " << tempVertex->info << " is connected to: ";
+		cout << "Node with data " << ptr->data << " is connected to: ";
 		
-		edge *tempEdge = tempVertex->head;
+		edge *q = ptr->adj;
 		
-		if(tempEdge == NULL)
-			cout << tempVertex->info;
+		if(q == NULL)
+			cout << ptr->data;
 			
 		else {
 			
-			while(tempEdge != NULL) {
+			while(q != NULL) {
 			
-				cout << tempEdge->info << "	";
-				tempEdge = tempEdge->link;
+				cout << q->data << "	";
+				q = q->link;
 			
 			}	
 		}
 
 		cout << endl;
-		tempVertex = tempVertex->next;
+		ptr = ptr->next;
 		
 	}
+}
+
+void control::push(node *info) {
+	
+	struct stack *temp = new struct stack;
+	temp->data = info;
+	temp->link = top;
+	top = temp;
 	
 }
 
-void control::push(stack** top, int data) {
-    stack* newNode = new stack;
-    newNode->info = data;
-    newNode->link = *top;
-    *top = newNode;
-}
-
-int control::pop(stack** top) {
-    if (*top == NULL) {
-        cerr << "Error: stack is empty." << endl;
-        return -1; // Assuming -1 is not a valid vertex index
-    }
-
-    int data = (*top)->info;
-    stack* temp = *top;
-    *top = (*top)->link;
+struct node *control::pop() {
+	
+	if(top == NULL) {
+		cout << "Stack is empty!" << endl;
+		return NULL;
+	}
+	struct stack *temp = top;
+	struct node *data = temp->data;
+	
+    top = top->link;
+    
     delete temp;
     return data;
 }
-bool control::isEmpty(stack* top) {
-    return top == NULL;
-}
 
-void control::depthFirstSearch(vertex* start) {
-    if (start == NULL) {
-        cout << "Graph is empty." << endl;
+void control::depth_first_search(char start_node_name) {
+	
+    node *start_node = find(start_node_name);
+
+    if (start_node == NULL) {
+        cout << "Node not found in the graph." << endl;
         return;
     }
+    
+    node *visited_array[5];
+    int i = 0;
+    int j = 0;
+    struct stack *ptr;
 
-    stack* dfsstack = NULL;
-    bool* visited = new bool[1000]; // Assuming a maximum of 1000 vertices
-    for (int i = 0; i < 1000; i++) {
-        visited[i] = false;
-    }
+    top = NULL;
+    start_node->visited = true;
+    push(start_node);
+    
+    cout << "\nStack after " << j + 1 << " pass:\n";
+    cout << start_node->data << endl;
 
-    push(&dfsstack, start->info);
-    visited[start->info] = true;
-
-    cout << "Depth First Search:" << endl;
-
-    while (!isEmpty(dfsstack)) {
-        int currentVertex = pop(&dfsstack);
-
-        cout << currentVertex << " ";
-
-        edge* currentEdge = start[currentVertex].head;
-        while (currentEdge != NULL) {
-            if (!visited[currentEdge->info]) {
-                visited[currentEdge->info] = true;
-                push(&dfsstack, currentEdge->info);
+    while (top != NULL) {
+        j++;
+        node *current = pop();
+        
+        cout << "\nStack after " << j + 1 << " pass:\n";
+        ptr = top;
+        while(ptr != NULL) {
+            cout << ptr->data->data << "\t";
+            ptr = ptr->link;
+        }
+        
+        cout << "\nVisited Array after " << j + 1 << " pass:\n";
+        visited_array[i] = current;
+        for(int k = 0; k <= i; k++)
+            cout << visited_array[k]->data << "\t";
+        i++;
+        
+        edge *temp = current->adj;
+        while (temp != NULL) {
+            node *adj_node = find(temp->data);
+            if (adj_node != NULL && adj_node->visited == false) {
+                j++;
+                adj_node->visited = true;
+                push(adj_node);
+                cout << "\nStack after " << j + 1 << " pass:\n";
+                ptr = top;
+                while(ptr != NULL) {
+                    cout << ptr->data->data << "\t";
+                    ptr = ptr->link;
+                }
             }
-            currentEdge = currentEdge->link;
+            temp = temp->link;
         }
     }
 
-    cout << endl;
-
-    delete[] visited;
+    node *reset_ptr = start;
+    while (reset_ptr != NULL) {
+        reset_ptr->visited = false;
+        reset_ptr = reset_ptr->next;
+    }
 }
+
+

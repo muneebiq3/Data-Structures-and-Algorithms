@@ -5,25 +5,26 @@
 
 using namespace std;
 
-struct vertex {
+struct node {
 	
-	int info;
+	char data;
+	bool visited;
 	
-	struct edge *head = NULL; //for edges of every vertex
-	struct vertex *next = NULL;
+	struct node *next = NULL;
+	struct edge *adj = NULL;
 	   
 };
 
 struct edge {
 	
-	int info;
+	char data;
 	
 	struct edge *link = NULL;
 };
 
 struct stack {
 	
-	int info;
+	node *data;
 	
 	struct stack *link = NULL;
 	
@@ -32,23 +33,19 @@ struct stack {
 struct control {
 	
 	public:
+		
+		struct node *start = NULL;
 		struct stack *top = NULL;
-		struct vertex *start = NULL;
 		
-		void push(int);
-		void pop();
-		
-		void insertVertex(int);
-		void insertEdge(vertex *v1, vertex *v2);
+		struct node *find(char);
+		void insert_node(char);
+		void insert_edge(char, char);
 		void display();
 		
-		void push(stack **top, int);
-		int pop(stack **top);
-		bool isEmpty(stack *top);
-		
-		void depthFirstSearch(vertex *start);
-};
+		void push(node *data);
+		node *pop();
+		void depth_first_search(char);
 
-//starting node for graph
+};
 
 #endif

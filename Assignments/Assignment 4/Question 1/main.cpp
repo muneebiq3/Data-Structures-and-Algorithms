@@ -8,94 +8,24 @@ int main() {
 	
 	int choice;
 	control list;
+	char node;
 	
-	list.insertVertex(0);
-	list.insertVertex(1);
-	list.insertVertex(2);
-	list.insertVertex(3);
-	list.insertVertex(4);
-	
-	vertex *v1 = NULL, *v2 = NULL;
-	vertex *temp = list.start;
-				
-		while(temp != NULL) {
-					
-			if(temp->info == 0)
-				v1 = temp;
-			if(temp->info == 1)
-				v2 = temp;
-						
-			temp = temp->next;
-					
-		}
-				
-	list.insertEdge(v1, v2);
-	
-	temp = list.start;
-				
-		while(temp != NULL) {
-					
-			if(temp->info == 0)
-				v1 = temp;
-			if(temp->info == 2)
-				v2 = temp;
-						
-			temp = temp->next;
-					
-		}
-				
-	list.insertEdge(v1, v2);
-	
-	temp = list.start;
-				
-		while(temp != NULL) {
-					
-			if(temp->info == 1)
-				v1 = temp;
-			if(temp->info == 2)
-				v2 = temp;
-						
-			temp = temp->next;
-					
-		}
-				
-	list.insertEdge(v1, v2);
-	
-	temp = list.start;
-				
-		while(temp != NULL) {
-					
-			if(temp->info == 0)
-				v1 = temp;
-			if(temp->info == 3)
-				v2 = temp;
-						
-			temp = temp->next;
-					
-		}
-				
-	list.insertEdge(v1, v2);
-	
-	temp = list.start;
-				
-		while(temp != NULL) {
-					
-			if(temp->info == 2)
-				v1 = temp;
-			if(temp->info == 4)
-				v2 = temp;
-						
-			temp = temp->next;
-					
-		}
-				
-	list.insertEdge(v1, v2);
-	
+	list.insert_node('0');
+	list.insert_node('1');
+	list.insert_node('2');
+	list.insert_node('3');
+	list.insert_node('4');
+
+	list.insert_edge('0', '1');
+	list.insert_edge('0', '2');
+	list.insert_edge('0', '3');
+	list.insert_edge('1', '2');
+	list.insert_edge('2', '4');
 	
 	while(1) {
 		
-		cout << "\Depth First Search for Undirected Graph\n";
-		cout << "\n1. Display";
+		cout << "\Depth First Search\n";
+		cout << "\n1. Display Adjacency List";
 		cout << "\n2. Depth First Search";
 		cout << "\n3. Quit" << endl << endl;
 		cout << "Enter your choice: ";
@@ -104,35 +34,16 @@ int main() {
 		switch (choice) {
 			
 			case 1: {
-				
-				if(list.start == NULL) {
-					cout << "Graph is empty!" << endl;
-					
-					getch();
-					system("cls");
-					break;
-				}
-				
-				else
-					list.display();
-				
+		
+				list.display();
 				getch();
 				system("cls");
 				break;
 				
 			} case 2: {
 				
-				if(list.start == NULL) {
-					cout << "Graph is empty!" << endl;
-					
-					getch();
-					system("cls");
-					break;
-				}
-				
-				else
-					list.depthFirstSearch(list.start);
-				
+				cout << "Enter the starting node: "; cin >> node;
+				list.depth_first_search(node);
 				getch();
 				system("cls");
 				break;
