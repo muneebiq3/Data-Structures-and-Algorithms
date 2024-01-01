@@ -9,7 +9,7 @@ This is a straightforward repository I've put together to assist you with this s
 - Circular Linked List
 - Stack
 - Single Queue
-- Double Queue
+- Circular Queue
 - Double Ended Queue
 - Binary Search Tree
 - AVL Tree

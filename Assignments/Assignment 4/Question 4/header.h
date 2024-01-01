@@ -54,6 +54,8 @@ struct control {
 		void enqueue2(node **c);
 		void traverse_path(char, char);
 		void displayQ();
+		bool isPresent(node *ptr);
+		void find_path(char);
 		
 };
 

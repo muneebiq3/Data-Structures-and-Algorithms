@@ -235,3 +235,59 @@ void control::displayQ() {
 		w = w->link;
 	}
 }
+
+bool control::isPresent(node *ptr) {
+	
+	struct queue *q = new struct queue;
+	q = front;
+	bool flag = false;
+	while(q != NULL){
+		if(ptr->name == q->add_node->name)
+			flag=true;
+
+		q=q->link;
+	}
+	return flag;
+}
+void control::find_path(char s){
+	
+	struct node *q = new struct node;
+	q = start;
+	while(q != NULL) {
+		enqueue(&q);
+		q = q->next;
+	}
+	
+	struct node *ptr = new struct node;
+	ptr = find(s);
+	ptr->dist = 0;
+	while(front != NULL) {	
+	
+		sort();
+		struct node *source = new struct node;
+		source = front->add_node;
+		
+		struct edge *e = new struct edge;
+		e = source->adj;
+		while(e != NULL){
+		    		
+		    struct node *qtr = new struct node;
+			qtr = find(e->dest);
+			bool flag = isPresent(qtr);
+			
+			if(flag == true){
+				if(qtr->dist>e->dist){
+				
+					qtr->dist = e->dist;
+					qtr->pred = source->name;
+				}
+			}
+			e = e->link;
+		}
+		
+		struct node *bp = new struct node;
+		bp = dequeue();
+		enqueue2(&bp);	
+	}
+	
+}

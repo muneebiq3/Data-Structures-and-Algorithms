@@ -37,9 +37,9 @@ int main() {
 	
 	while(1) {
 		
-		cout << "\nDijkstras Algorithm\n";
+		cout << "\nPrims Algorithm\n";
 		cout << "\n1. Display Adjacency List";
-		cout << "\n2. Dijkstras Algorithm";
+		cout << "\n2. Prims Algorithm";
 		cout << "\n3. Quit" << endl << endl;
 		cout << "Enter your choice: ";
 		cin >> choice;
@@ -65,6 +65,8 @@ int main() {
 				list.traverse_path('0', '6');
 				list.traverse_path('0', '7');
 				list.traverse_path('0', '8');
+				
+				list.displayQ();
 				
 				getch();
 				system("cls");
