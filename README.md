@@ -26,3 +26,5 @@ This is a straightforward repository I've put together to assist you with this s
 - Adjacency List
 - Stack-based Depth First Search
 - Dijkstras Algorithm
+- Prims Algorithm
+- Kruskal Algorithm
