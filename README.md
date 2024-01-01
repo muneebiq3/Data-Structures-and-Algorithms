@@ -17,5 +17,12 @@ This is a straightforward repository I've put together to assist you with this s
 - Max Heap Tree
 - Huffman Tree
 - Tower of Hanoi
-- Array and Linked List-based Sorting Algorithms
-- Adjacency List for Undirected Graph
+- Insertion Sort Array
+- Merge Sort Array(Recursive)
+- Quick Sort Array
+- Insertion Sort Linked List
+- Merge Sort Linked List(Recursive)
+- Quick Sort Linked List
+- Adjacency List
+- Stack-based Depth First Search
+- Dijkstras Algorithm
