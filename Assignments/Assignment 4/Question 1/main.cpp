@@ -24,7 +24,7 @@ int main() {
 	
 	while(1) {
 		
-		cout << "\Depth First Search\n";
+		cout << "\nDepth First Search\n";
 		cout << "\n1. Display Adjacency List";
 		cout << "\n2. Depth First Search";
 		cout << "\n3. Quit" << endl << endl;
