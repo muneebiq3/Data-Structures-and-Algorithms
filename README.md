@@ -17,6 +17,7 @@ This is a straightforward repository I've put together to assist you with this s
 - Max Heap Tree
 - Huffman Tree
 - Tower of Hanoi
+- Selection Sort Array
 - Insertion Sort Array
 - Quick Sort Array
 - Merge Sort Array(Recursive)

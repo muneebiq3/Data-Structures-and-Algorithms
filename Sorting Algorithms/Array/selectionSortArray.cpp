@@ -1,13 +1,13 @@
-//INSERTION SORT ARRAY
+//SELECTION SORT ARRAY
 #include <iostream>
 #define MAX 30
+using namespace std;
+
 int array[MAX];
 
-using namespace std;
-void insertionSort() {
+void selectionSort() {
 	
-	int temp,j, n;
-	bool exchange;
+	int j, n;
 	
 	cout << "Enter the number of elements: "; cin >> n;
 	for(int i = 0; i < n; i++) {
@@ -21,20 +21,19 @@ void insertionSort() {
 		
 	cout << endl;
 	
-	for(int i = 1; i < n; i++) {
+	for(int i = 0; i < n - 1; i++) {
 		
-		temp = array[i];
-		for(j = i - 1; ( j >= 0 && temp < array[j] ); j--) 
-			array[j + 1] = array[j];
+		int least = i;
+		
+		for(j = i + 1; j < n; j ++) {
 			
-		array[j + 1] = temp;
-		
-		cout << "\nPass " << i << " Element inserted in proper place: " << temp << endl;
-		
-		for(int k = 0; k < n; k++)
-			cout << "[" << k << "]: " << array[k] << "	";
+			if(array[j] < array[least])
+				least = j;
 			
-		cout << endl;
+			int temp = array[i];
+			array[i] = array[least];
+			array[least] = temp;
+		}
 		
 	}
 	
@@ -48,7 +47,7 @@ void insertionSort() {
 
 int main () {
 	
-	insertionSort();
+	selectionSort();
 	
 	return 0;
 }
