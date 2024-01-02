@@ -18,11 +18,12 @@ This is a straightforward repository I've put together to assist you with this s
 - Huffman Tree
 - Tower of Hanoi
 - Insertion Sort Array
-- Merge Sort Array(Recursive)
 - Quick Sort Array
+- Merge Sort Array(Recursive)
 - Insertion Sort Linked List
-- Merge Sort Linked List(Recursive)
+- Bubble Sort Linked List
 - Quick Sort Linked List
+- Merge Sort Linked List(Recursive)
 - Adjacency List
 - Stack-based Depth First Search
 - Dijkstras Algorithm
