@@ -44,10 +44,7 @@ void display() {
 
 void bubbleSort(node *head) {
 	
-	struct node *ptr = head;;
-	
-	
-	
+	struct node *ptr = head;
 	
 	while (ptr != NULL) {
 		
