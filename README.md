@@ -20,8 +20,9 @@ This is a straightforward repository I've put together to assist you with this s
 - Insertion Sort Array
 - Quick Sort Array
 - Merge Sort Array(Recursive)
-- Insertion Sort Linked List
 - Bubble Sort Linked List
+- Selection Sort Linked List
+- Insertion Sort Linked List
 - Quick Sort Linked List
 - Merge Sort Linked List(Recursive)
 - Adjacency List
