@@ -1,6 +1,6 @@
 # Data Structures and Algorithms
 ## Hello!
-This is a straightforward repository I've put together to assist you with DSA subject. I hope it proves helpful. Best of luck :)
+This is a straightforward repository I've put together to help you with the DSA subject. I hope this is helpful to you. Best of luck :)
 
 ### Topics Covered
 
